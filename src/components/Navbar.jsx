@@ -37,6 +37,11 @@ export default function Navbar() {
 
   const navOptions = [
     {
+      name: "Search Products",
+      to: "/searchproducts",
+      func: () => {},
+    },
+    {
       name: "My Profile",
       to: "/account/user",
       func: () => {},
@@ -80,13 +85,16 @@ export default function Navbar() {
       setSelected(null);
     }
     if (path === "/EmailforBecomingAnAdmin") {
-      setSelected(2);
+      setSelected(3);
     }
     if (path === "/account/user") {
-      setSelected(1);
+      setSelected(2);
     }
     if (filterPath.includes("dashboard")) {
       setSelected(0);
+    }
+    if (filterPath.includes("search")) {
+      setSelected(1);
     }
   }, [location.pathname, filterPath]);
   console.log(cookies.token);

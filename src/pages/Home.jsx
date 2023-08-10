@@ -11,6 +11,7 @@ import { useCookies } from "react-cookie";
 import successAndFailure from "../utils/successAndFail";
 import { ToastContainer, toast } from "react-toastify";
 import { setAuthenticated, setUser } from "../context/userSlice";
+import CategoriesGrid from "../components/CategoriesGrid";
 const Home = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
@@ -32,15 +33,18 @@ const Home = () => {
   console.log(cookies.token);
   return (
     <>
-      <ParallaxProvider>
-        <MetaData title={"Home"} />
-        <section className="hidden lg:flex">
-          <ParallaxEffect />
-        </section>
-        {cart && <Cart />}
-        <NewProductList />
-        {/* <ProductList /> */}
-      </ParallaxProvider>
+      <section className="bg-black min-h-screen lg:h-auto">
+        <ParallaxProvider>
+          <MetaData title={"Home"} />
+          <section className="hidden lg:flex">
+            <ParallaxEffect />
+          </section>
+          {cart && <Cart />}
+          <NewProductList />
+          <CategoriesGrid />
+          <ProductList />
+        </ParallaxProvider>
+      </section>
     </>
   );
 };

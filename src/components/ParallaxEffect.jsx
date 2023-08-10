@@ -54,7 +54,7 @@ export default function Main() {
     children: (
       <div className="absolute top-14 left-14">
         <h1 className="text-white tracking-widest font-thin text-xl ">
-          Scroll Down
+          Scroll Slowly!
         </h1>
       </div>
     ),

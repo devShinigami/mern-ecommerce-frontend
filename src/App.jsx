@@ -11,6 +11,7 @@ import MyDashBoard from "./pages/MyDashBoard";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import AllBrandProducts from "./pages/AllBrandProducts";
+import Search from "./pages/Search";
 function App() {
   const location = useLocation();
   const showNavbar = ["/auth/login", "/auth/signup"].includes(
@@ -28,6 +29,8 @@ function App() {
         <Route path="/account/user" Component={UserProfile} />
         <Route path="/account/user/dashboard" Component={MyDashBoard} />
         <Route path="/EmailforBecomingAnAdmin" Component={ContactUs} />
+        <Route path="/searchproducts" Component={Search} />
+
         <Route path="/allproducts/:name/:id" Component={AllBrandProducts} />
       </Routes>
       <ToastContainer

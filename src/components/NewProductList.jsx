@@ -24,7 +24,7 @@ const NewProductList = () => {
   console.log();
   return (
     <>
-      <section className="min-h-screen bg-black text-gray-300">
+      <section className="bg-black  text-gray-300">
         <p className="text-center lg:text-5xl p-12 uppercase tracking-widest">
           Our Collaborators!
         </p>
