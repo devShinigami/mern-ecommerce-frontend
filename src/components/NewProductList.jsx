@@ -1,15 +1,12 @@
-import { StarIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewProductCard from "./NewProductCard";
-import ScrollContainer from "react-scroll-horizontal";
 import handleRequest from "../utils/handleRequest";
+import ScrollContainer from "react-scroll-horizontal";
 import { Link } from "react-router-dom";
-
 const NewProductList = () => {
   const [page, setPage] = useState(1);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
-
   useEffect(() => {
     const fetchBrands = async () => {
       const response = await handleRequest("GET", `/getBrandsDisplay`);
@@ -29,7 +26,7 @@ const NewProductList = () => {
           Our Collaborators!
         </p>
         <main>
-          <aside className="lg:flex items-center hidden  ">
+          <aside className="lg:block space-y-4 items-center hidden  ">
             {brands.map((brand) => (
               <>
                 <section className="w-1/4 text-5xl text-center font-bold uppercase">
@@ -40,7 +37,7 @@ const NewProductList = () => {
                   vertical={false}
                   reverseScroll
                 >
-                  <section className="flex overflow-auto scrollbar-hide">
+                  <section className="flex">
                     {brand.products.map((product) => (
                       <NewProductCard product={product} />
                     ))}

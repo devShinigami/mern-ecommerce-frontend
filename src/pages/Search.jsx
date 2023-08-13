@@ -16,7 +16,7 @@ const Search = () => {
     <section className="min-h-screen bg-black">
       <main className="w-full p-8 flex">
         <input
-          className="bg-black border-gray-300 text-gray-300 focus:border-gray-300"
+          className="bg-black border-gray-300 text-gray-300 outline-none focus:outline-0 focus:border-gray-300"
           placeholder="Search..."
           type="text"
           required
@@ -26,7 +26,7 @@ const Search = () => {
           <AiOutlineSearch className="text-gray-300 hover:text-black hover:bg-gray-300 hover:-translate-y-1 transition-all duration-150 h-10 w-10 border border-gray-300" />
         </button>
       </main>
-      <section className="flex flex-wrap">
+      <section className="flex flex-wrap justify-center">
         {products.map((product) => (
           <NewProductCard product={product} />
         ))}

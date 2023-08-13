@@ -178,7 +178,6 @@ const CreateProduct = () => {
             <select
               onChange={handleChange}
               value={form.brandName}
-              required
               name="brandName"
               className="bg-black  text-gray-300"
             >

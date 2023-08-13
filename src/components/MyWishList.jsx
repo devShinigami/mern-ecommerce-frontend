@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import handleRequest from "../utils/handleRequest";
 import { Link } from "react-router-dom";
+import WishlishCard from "./WishlishCard";
 
 const MyWishList = ({ userId }) => {
   const [wishList, setWishList] = useState([]);
@@ -17,7 +18,7 @@ const MyWishList = ({ userId }) => {
         );
         console.log(response);
         if (response.success) {
-          setWishList(response.orders);
+          setWishList(response.wishlist);
         }
       } catch (error) {
         console.log(error);
@@ -28,10 +29,22 @@ const MyWishList = ({ userId }) => {
   return (
     <section>
       <p className="text-2xl text-gray-300 font-bold m-4">My Wishlist</p>
-      <main>
+      <main
+        className={`${
+          wishList?.length > 0 ? "flex flex-wrap justify-center gap-2" : ""
+        } `}
+      >
         {wishList?.length > 0 ? (
           <>
-            <section>orders</section>
+            {wishList.map((product) => (
+              <WishlishCard
+                user={userId}
+                setWishList={setWishList}
+                wishList={wishList}
+                cookies={cookies}
+                product={product}
+              />
+            ))}
           </>
         ) : (
           <>

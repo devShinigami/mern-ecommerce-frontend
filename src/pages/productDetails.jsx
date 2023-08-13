@@ -12,8 +12,10 @@ import MetaData from "../utils/metaData";
 import Cart from "../components/Cart";
 import EditProduct from "../components/admin/EditProduct";
 import { useCookies } from "react-cookie";
+import successAndFailure from "../utils/successAndFail";
+import { addToCart } from "../context/Cart";
 export default function ProductDetails() {
-  const { cart } = useSelector((state) => state.cart);
+  const { cart, products } = useSelector((state) => state.cart);
   const { loading } = useSelector((state) => state.loading);
   const { user } = useSelector((state) => state.user);
 
@@ -27,23 +29,30 @@ export default function ProductDetails() {
   const [openReturn, setOpenReturn] = useState(false);
   const [image, setImage] = useState("");
   const [like, setLike] = useState(false);
+  const [likedByUser, setLikedByUser] = useState([]);
   const [selected, setSelected] = useState(0);
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState({});
   const [brandsName, setBrandsName] = useState([]);
   const [cookies, setCookies] = useCookies(["token"]);
-
+  const [alreadyInBag, setAlreadyInBag] = useState(false);
   useEffect(() => {
     const fetchDetails = async () => {
       dispatch(setLoading(true));
       const details = await handleRequest("GET", `/oneProduct/${params.id}`);
-      setProduct(details.product);
+      setLikedByUser(details?.product?.liked);
+      setProduct(details?.product);
       setImage(details?.product?.images[0]?.image_url);
 
-      console.log(details.product);
       dispatch(setLoading(false));
     };
     fetchDetails();
   }, [params]);
+
+  useEffect(() => {
+    if (likedByUser.length > 0 && likedByUser.includes(user._id)) {
+      setLike(true);
+    }
+  }, [likedByUser]);
 
   const handleChange = (index, item) => {
     setSelected(index);
@@ -61,7 +70,6 @@ export default function ProductDetails() {
           cookies.token,
           user.role
         );
-        console.log(response);
         if (response) {
           setBrandsName(response.brandsName);
           dispatch(setLoading(false));
@@ -71,6 +79,65 @@ export default function ProductDetails() {
     }
   }, [edit]);
 
+  const handleAddToWishList = async () => {
+    try {
+      setLike(true);
+      const response = await handleRequest(
+        "PUT",
+        `/addToWishList/${user._id}`,
+        {
+          productId: product._id,
+        },
+        cookies.token
+      );
+      successAndFailure(true, response.message);
+    } catch (error) {
+      successAndFailure(false, error.message || "failed to add");
+    }
+  };
+
+  const handleRemoveFromWishList = async () => {
+    try {
+      setLike(false);
+      const response = await handleRequest(
+        "PUT",
+        `/removeFromWishList/${user._id}`,
+        {
+          productId: product._id,
+        },
+        cookies.token
+      );
+      successAndFailure(true, response.message);
+    } catch (error) {
+      successAndFailure(false, error.message || "failed to remove");
+    }
+  };
+
+  const handleAddToBag = () => {
+    dispatch(
+      addToCart({
+        id: product._id,
+        title: product.name,
+        price: product.price,
+        description: product.description,
+        image: product.images[0].image_url,
+        quantity: 1,
+        brand: product.category,
+      })
+    );
+    successAndFailure(true, "Added to bag successfully!");
+  };
+
+  useEffect(() => {
+    const checkAlreadyInBag = () => {
+      const item = products.find((item) => item.id === product._id);
+      if (item) {
+        setAlreadyInBag(true);
+      }
+    };
+    checkAlreadyInBag();
+  }, [products]);
+
   return (
     <>
       {cart && <Cart />}
@@ -79,7 +146,7 @@ export default function ProductDetails() {
       ) : (
         <>
           <section className="bg-black select-none">
-            {user._id === product.user && (
+            {user?._id === product.user && (
               <button
                 onClick={() => setEdit((prev) => !prev)}
                 className="bg-black mx-8 text-gray-300  border border-gray-300 py-2 px-4 hover:-translate-y-2 transition-all duration-150 hover:bg-gray-300 hover:text-black text-lg font-light tracking-widest"
@@ -122,25 +189,34 @@ export default function ProductDetails() {
                     </div>
                   </aside>
                   <div className="flex items-center my-4">
-                    <button className="py-4 px-8 bg-black text-gray-300 border border-gray-300 rounded-lg mr-4 hover:-translate-y-2 duration-150 transition-all">
-                      Add to Bag
-                    </button>
+                    {!alreadyInBag ? (
+                      <button
+                        onClick={handleAddToBag}
+                        className="py-4 px-8 bg-black text-gray-300 border border-gray-300 rounded-lg mr-4 hover:-translate-y-2 duration-150 transition-all"
+                      >
+                        Add to Bag
+                      </button>
+                    ) : (
+                      <>
+                        <p className="text-gray-200">Already Added to Bag!</p>
+                      </>
+                    )}
 
                     {like ? (
                       <>
                         <AiFillHeart
                           className="w-10 h-10 cursor-pointer"
-                          onClick={() => setLike((prev) => !prev)}
+                          onClick={() => handleRemoveFromWishList()}
                         />
-                        <p className="font-medium text-gray-300">
-                          Remove from wishlist
+                        <p className="font-light tracking-widest text-gray-300">
+                          Remove from WISHLIST
                         </p>
                       </>
                     ) : (
                       <>
                         <AiOutlineHeart
                           className="w-10 h-10 cursor-pointer"
-                          onClick={() => setLike((prev) => !prev)}
+                          onClick={() => handleAddToWishList()}
                         />
                         <p className="font-medium text-gray-300">
                           Add to wishlist

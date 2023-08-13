@@ -1,11 +1,5 @@
-import { Fragment, useEffect, useState } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import {
-  ShoppingCartIcon,
-  Bars3Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticated, setUser } from "../context/userSlice";
 import { setCart } from "../context/Cart";
@@ -18,8 +12,9 @@ import { BiCart } from "react-icons/bi";
 import successAndFailure from "../utils/successAndFail";
 export default function Navbar() {
   const { user, authenticated } = useSelector((state) => state.user);
+  const { products } = useSelector((state) => state.cart);
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [selected, setSelected] = useState(5);
   const location = useLocation();
   const [cookies, setCookies] = useCookies(["token"]);
@@ -54,8 +49,13 @@ export default function Navbar() {
     },
     {
       name: (
-        <span>
+        <span className="relative">
           <BiCart className="w-8 h-8" />
+          {authenticated && (
+            <span className="absolute top-0 -right-2 bg-gray-300 text-black rounded-full px-1">
+              {products.length}
+            </span>
+          )}
         </span>
       ),
       func: () => {

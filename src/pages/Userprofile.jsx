@@ -17,26 +17,29 @@ const UserProfile = () => {
   const [cookies, setCookies] = useCookies(["token"]);
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchDetails = async () => {
-      const response = await handleRequest(
-        "GET",
-        `/userdetails/${user._id}`,
-        {},
-        cookies.token
-      );
-      if (response) {
-        const { name, profilePic, email, role, _id, createdAt } = response.user;
-        dispatch(setUser({ name, profilePic, email, role, _id, createdAt }));
-      }
-    };
-    fetchDetails();
+    if (authenticated) {
+      const fetchDetails = async () => {
+        const response = await handleRequest(
+          "GET",
+          `/userdetails/${user._id}`,
+          {},
+          cookies.token
+        );
+        if (response) {
+          const { name, profilePic, email, role, _id, createdAt } =
+            response.user;
+          dispatch(setUser({ name, profilePic, email, role, _id, createdAt }));
+        }
+      };
+      fetchDetails();
+    }
   }, []);
   return (
     <>
       {cart && <Cart />}
       {!loading && authenticated ? (
         <section className="pt-6 bg-black text-gray-300 font-medium items-center justify-center h-screen scrollbar-track-slate-950 scrollbar overflow-auto">
-          <section className="max-w-7xl mx-auto bg-black rounded-2xl px-8 py-6 shadow-lg">
+          <section className="max-w-7xl mx-auto bg-black rounded-2xl px-4 py-6 shadow-lg">
             <MetaData title={user.name} />
             <div className="flex items-center justify-between">
               <p className="text-gray-300">{user.email}</p>
@@ -82,7 +85,11 @@ const UserProfile = () => {
         </section>
       ) : (
         <>
-          <h1>you are not logged in</h1>
+          <main className="bg-black min-h-screen flex items-center justify-center">
+            <p className="tracking-widest text-xl text-gray-300">
+              Login To buy or add to wishlist!
+            </p>
+          </main>
         </>
       )}
     </>

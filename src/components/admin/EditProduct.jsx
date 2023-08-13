@@ -61,6 +61,7 @@ const EditProduct = ({ product, brandsName }) => {
           stock: form.stock,
           price: form.price,
           images: newImages,
+          oldImages: product.images,
           deletedImageId,
         },
         cookies.token,
@@ -89,6 +90,7 @@ const EditProduct = ({ product, brandsName }) => {
       const filter = dlete.filter((item, index) => item === image);
       filteredImages = filteredImages.concat(filter);
     });
+    product.images = dlete;
     setNewImages(filteredImages);
     if (img.public_id) {
       setDeletedImageId([...deletedImageId, img.public_id]);

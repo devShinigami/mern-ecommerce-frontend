@@ -21,7 +21,7 @@ const NewProductCard = ({ product }) => {
                   </span>
                 </div>
 
-                <h4 className="mt-1 text-xl font-semibold uppercase leading-tight truncate">
+                <h4 className="mt-1 w-56 text-xl font-semibold uppercase leading-tight truncate">
                   {product?.name}
                 </h4>
 

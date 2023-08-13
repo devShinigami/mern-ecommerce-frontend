@@ -1,7 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import productsReducer from "./productSlice";
 import loadingReducer from "./LoadingSlice";
 import userReducer from "./userSlice";
+import shippingReducer from "./ShippingInfoSlice";
+import orderReducer from "./orderSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import thunk from "redux-thunk";
@@ -12,13 +14,19 @@ const persistconfig = {
 };
 
 const persistedUserReducer = persistReducer(persistconfig, userReducer);
-
+const persistedCartReducer = persistReducer(persistconfig, cartReducer);
+const persistedShippingsReducer = persistReducer(
+  persistconfig,
+  shippingReducer
+);
 export const store = configureStore({
   reducer: {
     products: productsReducer,
     loading: loadingReducer,
     user: persistedUserReducer,
-    cart: cartReducer,
+    cart: persistedCartReducer,
+    shippingInfo: persistedShippingsReducer,
+    order: orderReducer,
   },
   middleware: [thunk],
 });
